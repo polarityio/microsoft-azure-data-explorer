@@ -36,9 +36,13 @@ email | where reply_to == polarity_entity_value | limit 25
 
 > Using the integration's Data Types page, disable any data types that are not valid for the query to reduce the number of queries sent to BigQuery.  For example, if you are looking up a row by domain, disable all other Data Types other than domain.
 
+### Search Query Timeout in Milliseconds
+
+The number of milliseconds before the search query is cancelled due to reaching the specified timeout. Defaults to 10000 milliseconds.",
+
 ### Summary Fields
 
-Comma delimited list of field names to include as part of the summary tags. JSON dot notation can be used to target nested fields. Fields must be returned by your search query to be displayed. You can change the label for your fields by prepending the label to the field path and separating it with a colon (i.e., "<label>:<json path>"). If left blank, a result count will be shown. This option should be set to "Lock and hide option for all users".
+Comma-delimited list of field names to include as part of the summary tags. JSON dot notation can be used to target nested fields. Fields must be returned by your search query to be displayed. You can change the label for your fields by prepending the label to the field path and separating it with a colon (i.e., "<label>:<json path>"). If left blank, a result count will be shown. This option should be set to "Lock and hide option for all users".
 
 For example, to display `as_domain` from the previous example query as a summary field you would do:
 
@@ -58,7 +62,7 @@ The maximum number of summary field tags to display in the Overlay Window before
 
 ### Details Fields
 
-Comma delimited list of field names to include as part of the details block. JSON dot notation can be used to target nested fields. Fields must be returned by your search query to be displayed. You can change the label for your fields by prepending the label to the field path and separating it with a colon (i.e., "<label>:<json path>"). If left blank, all fields will be shown in tabular format. This option should be set to "Lock and hide option for all users".
+Comma-delimited list of field names to include as part of the details block. JSON dot notation can be used to target nested fields. Fields must be returned by your search query to be displayed. You can change the label for your fields by prepending the label to the field path and separating it with a colon (i.e., "<label>:<json path>"). If left blank, all fields will be shown in tabular format. This option should be set to "Lock and hide option for all users".
 
 For example, to display three fields called 'start_ip', 'end_ip', 'country_name' you could do:
 
