@@ -1,4 +1,5 @@
 {
+  "polarityIntegrationUuid": "c653d060-4505-11f0-82cd-07e5dcf8eda0",
   "name": "Microsoft Azure Data Explorer",
   "acronym": "ADX",
   "description": "Run Kusto queries against your Azure Data Explorer cluster",
