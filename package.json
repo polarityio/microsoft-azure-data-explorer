@@ -1,0 +1,11 @@
+{
+  "name": "MicrosoftAzureDataexplorer",
+  "version": "3.0.0",
+  "main": "./integration.js",
+  "private": true,
+  "dependencies": {
+    "azure-kusto-data": "^6.0.4",
+    "lodash": "^4.17.21",
+    "async": "^3.2.6"
+  }
+}
