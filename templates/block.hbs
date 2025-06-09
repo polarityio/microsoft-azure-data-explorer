@@ -1,0 +1,98 @@
+{{!-- Beginning of Paging Header --}}
+{{#if (gt filteredPagingData.length 0)}}
+  <div class="d-flex align-items-center justify-content-between mb-2">
+    <div class="pl-1 page-info p-footnote">
+      {{#if (gt pagingData.length pageSize)}}
+        Viewing search results {{pagingStartItem}} - {{pagingEndItem}} of {{pagingData.length}}
+      {{else}}
+        Viewing {{pagingData.length}} search results
+      {{/if}}
+    </div>
+  </div>
+{{/if}}
+{{!-- End of Paging Header --}}
+
+{{#each filteredPagingData as |row index|}}
+    <div class="row-container">
+      <div>
+          {{#if row.title}}
+              <span class="p-title mt-0">{{row.title}}</span>
+          {{else}}
+              <span class="p-title mt-0">Row #{{row.rowNumber}}</span>
+          {{/if}}
+      </div>
+
+      <div>
+        {{#each row.details as | detail |}}
+          <div>
+            <span class="p-key">{{detail.label}}:</span>
+            <span class="p-value">{{detail.value}}</span>
+          </div>
+        {{/each}}
+        {{#if (gt row.details.length 0)}}
+          <div class="p-action mt-1 mb-0" {{action "toggleTabs" index}}>
+            {{#if row.showTabs}}
+                Hide
+            {{else}}
+                Show
+            {{/if}}
+            details
+            {{#if row.showTabs}}
+              {{fa-icon icon="chevron-up"}}
+            {{else}}
+              {{fa-icon icon="chevron-down"}}
+            {{/if}}
+          </div>
+        {{/if}}
+      </div>
+
+      {{#if (or row.showTabs (eq row.details.length 0))}}
+        <ul class="nav nav-tabs mt-1">
+            <li class="nav-item">
+                <a {{action "showTable" index}} class="nav-link {{if (or row.showTable (not row.showTable row.showJson)) "active"}}" href="#">Table</a>
+            </li>
+            <li class="nav-item">
+                <a {{action "showJson" index}} class="nav-link {{if row.showJson "active"}}" href="#">JSON</a>
+            </li>
+        </ul>
+
+        {{#if (or row.showTable (not row.showTable row.showJson))}}
+          <div class="tab-container fields-table">
+              {{object-to-table row.data}}
+          </div>
+        {{/if}}
+
+        {{#if row.showJson}}
+          <div class="tab-container json-block">
+              <pre>{{{row.json}}}</pre>
+          </div>
+        {{/if}}
+      {{/if}}
+    </div>
+{{/each}}
+
+{{!-- Result Paging component --}}
+{{#if (gt pagingData.length pageSize)}}
+  <div class="paging-bar">
+    <button class="btn paging-btn" {{action "firstPage"}} disabled={{isPrevButtonsDisabled}}>
+      {{fa-icon icon="angle-double-left" fixedWidth=false}}
+    </button>
+    <button class="btn paging-btn" {{action "prevPage"}} disabled={{isPrevButtonsDisabled}}>
+      {{fa-icon icon="angle-left" fixedWidth=false}}
+    </button>
+    <div class="paging-info">
+      {{#if (eq pageSize 1)}}
+        {{pagingStartItem}} of {{pagingData.length}}
+      {{else}}
+        {{pagingStartItem}} - {{pagingEndItem}} of {{pagingData.length}}
+      {{/if}}
+    </div>
+    <button class="btn paging-btn" {{action "nextPage"}} disabled={{isNextButtonDisabled}}>
+      {{fa-icon icon="angle-right" fixedWidth=false}}
+    </button>
+    <button class="btn paging-btn" {{action "lastPage"}} disabled={{isNextButtonDisabled}}>
+      {{fa-icon icon="angle-double-right" fixedWidth=false}}
+    </button>
+  </div>
+{{/if}}
+{{!-- End of Paging Component --}}
