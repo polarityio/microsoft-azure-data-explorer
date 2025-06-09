@@ -81,10 +81,20 @@ module.exports = {
       adminOnly: true
     },
     {
+      key: 'queryTimeout',
+      name: 'Search Query Timeout in Milliseconds',
+      description:
+        'The number of milliseconds before the search query is cancelled due to reaching the specified timeout. Defaults to 10000 milliseconds.',
+      default: 10000,
+      type: 'number',
+      userCanEdit: false,
+      adminOnly: true
+    },
+    {
       key: 'summaryFields',
       name: 'Summary Fields',
       description:
-        'Comma delimited list of field names to include as part of the summary tags. JSON dot notation can be used to target nested fields. Fields must be returned by your search query to be displayed. You can change the label for your fields by prepending the label to the field path and separating it with a colon (i.e., "<label>:<json path>"). If left blank, a result count will be shown. This option should be set to "Lock and hide option for all users".',
+        'Comma-delimited list of field names to include as part of the summary tags. JSON dot notation can be used to target nested fields. Fields must be returned by your search query to be displayed. You can change the label for your fields by prepending the label to the field path and separating it with a colon (i.e., "<label>:<json path>"). If left blank, a result count will be shown. This option should be set to "Lock and hide option for all users".',
       default: '',
       type: 'text',
       userCanEdit: false,
@@ -104,7 +114,7 @@ module.exports = {
       key: 'detailFields',
       name: 'Details Fields',
       description:
-        'Comma delimited list of field names to include as part of the details block. JSON dot notation can be used to target nested fields. Fields must be returned by your search query to be displayed. You can change the label for your fields by prepending the label to the field path and separating it with a colon (i.e., "<label>:<json path>"). If left blank, all fields will be shown in tabular format. This option should be set to "Lock and hide option for all users".',
+        'Comma-delimited list of field names to include as part of the details block. JSON dot notation can be used to target nested fields. Fields must be returned by your search query to be displayed. You can change the label for your fields by prepending the label to the field path and separating it with a colon (i.e., "<label>:<json path>"). If left blank, all fields will be shown in tabular format. This option should be set to "Lock and hide option for all users".',
       default: '',
       type: 'text',
       userCanEdit: false,

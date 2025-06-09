@@ -1,4 +1,5 @@
 const { KustoConnectionStringBuilder, Client: KustoClient, ClientRequestProperties } = require('azure-kusto-data');
+const { QueryExecutionError } = require('./query-execution-error');
 const async = require('async');
 const _ = require('lodash');
 
@@ -78,11 +79,19 @@ async function doLookup(entities, options, cb) {
 
         // Bind the parameter value
         requestProps.setParameter('polarity_entity_value', entity.value);
+
+        // Set the query timeout in milliseconds
+        requestProps.setTimeout(options.queryTimeout);
       }
 
       Logger.trace({ kustoQuery }, 'Kusto Query to Execute');
-
-      const response = await kustoClient.execute(options.dbName, kustoQuery, requestProps);
+      let response;
+      try {
+        response = await kustoClient.execute(options.dbName, kustoQuery, requestProps);
+      } catch (queryError) {
+        const kustoError = formatKustoError(queryError, options);
+        throw new QueryExecutionError(kustoError, kustoQuery, entity.value);
+      }
 
       const primaryResults = response.primaryResults[0];
       const rows = [];
@@ -119,10 +128,8 @@ async function doLookup(entities, options, cb) {
       }
     });
   } catch (error) {
-    const kustoError = formatKustoError(error);
-    Logger.error({ kustoError }, 'doLookup Error');
-
-    return cb(kustoError);
+    Logger.error({ error }, 'doLookup error');
+    return cb(error);
   }
 
   Logger.trace({ lookupResults }, 'doLookup results');
@@ -138,7 +145,7 @@ const parseErrorToReadableJSON = (error) => JSON.parse(JSON.stringify(error, Obj
  * @param {unknown} err
  * @returns {string}
  */
-function formatKustoError(err) {
+function formatKustoError(err, options) {
   // axios-style: err.response.data
   const srv = err?.response?.data?.error ?? err?.response?.data;
 
@@ -154,7 +161,12 @@ function formatKustoError(err) {
     const code = srv.code ?? srv['@type'] ?? 'Error';
     const message = srv.message ?? srv['@message'] ?? 'Unknown failure';
     const inner = srv.innererror?.['@message'] ?? '';
-    return `${code}: ${message}${inner ? ` – ${inner}` : ''}`;
+
+    if (code === 'RequestExecutionTimeout') {
+      return `The query has exceeded the maximum query timeout of ${options.queryTimeout} milliseconds`;
+    } else {
+      return `${code}: ${message}${inner ? ` – ${inner}` : ''}`;
+    }
   }
 
   // Fallbacks
